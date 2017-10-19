@@ -1,0 +1,23 @@
+version: '2'
+services:
+  app:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: api.theliturgists.com/app
+    volumes:
+     - .:/var/www/html
+    networks:
+     - sdnet
+  mysql:
+    image: mariadb:10.2
+    volumes:
+     - mysqldata:/var/lib/mysql
+    networks:
+     - sdnet
+  redis:
+    image: redis:alpine
+    volumes:
+     - redisdata:/data
+    networks:
+     - sdnet

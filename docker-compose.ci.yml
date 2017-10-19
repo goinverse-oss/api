@@ -1,0 +1,18 @@
+version: '2'
+services:
+  app:
+    extends:
+      file: docker-compose.base.yml
+      service: app
+  redis:
+    extends:
+      file: docker-compose.base.yml
+      service: redis
+networks:
+  sdnet:
+    driver: "bridge"
+volumes:
+  mysqldata:
+    driver: "local"
+  redisdata:
+    driver: "local"
