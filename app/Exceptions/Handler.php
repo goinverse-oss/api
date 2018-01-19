@@ -2,12 +2,16 @@
 
 namespace App\Exceptions;
 
+use CloudCreativity\LaravelJsonApi\Exceptions\HandlesErrors;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Neomerx\JsonApi\Exceptions\JsonApiException;
 
 class Handler extends ExceptionHandler
 {
+
+    use HandlesErrors;
 
     /**
      * A list of the exception types that are not reported.
@@ -15,6 +19,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+        JsonApiException::class,
     ];
 
     /**
@@ -34,6 +39,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Exception  $exception
      * @return void
+     * @throws \Exception
      */
     public function report(Exception $exception)
     {
@@ -45,10 +51,14 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $exception)
     {
+        if ($this->isJsonApi()) {
+            return $this->renderJsonApi($request, $exception);
+        }
+
         return parent::render($request, $exception);
     }
 

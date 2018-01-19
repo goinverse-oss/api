@@ -1,7 +1,7 @@
 <?php
 
-use App\Podcast;
-use Illuminate\Http\Request;
+use CloudCreativity\LaravelJsonApi\Routing\ApiGroup as Api;
+use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,17 @@ use Illuminate\Http\Request;
 |
 */
 
+JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $api) {
+    $api->resource('podcasts', [
+        'has-many' => ['contributors'],
+    ]);
+    $api->resource('contributors', [
+        'has-many' => ['podcasts']
+    ]);
+});
+
+
+
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
@@ -21,19 +32,19 @@ use Illuminate\Http\Request;
 
 
 
-Route::group(['prefix' => 'v1', 'namespace' => 'Api'], function() {
+//Route::group(['prefix' => 'v1', 'namespace' => 'Api'], function() {
+//
+//    Route::post('register', 'UsersController@create');
+//
+//});
 
-    Route::post('register', 'UsersController@create');
-
-});
-
-Route::group(['prefix' => 'v1', 'middleware' => 'auth:api', 'namespace' => 'Api'], function() {
-
-    Route::get('podcasts', 'PodcastsController@index');
-    Route::get('podcasts/{podcast}', 'PodcastsController@read');
-    Route::post('podcasts', 'PodcastsController@create');
-    Route::put('podcasts/{podcast}', 'PodcastsController@update');
-    Route::patch('podcasts/{podcast}', 'PodcastsController@update');
-    Route::delete('podcasts/{podcast}', 'PodcastsController@delete');
-
-});
+//Route::group(['prefix' => 'v1', 'middleware' => 'auth:api', 'namespace' => 'Api'], function() {
+//
+//    Route::get('podcasts', 'PodcastsController@index');
+//    Route::get('podcasts/{podcast}', 'PodcastsController@read');
+//    Route::post('podcasts', 'PodcastsController@create');
+//    Route::put('podcasts/{podcast}', 'PodcastsController@update');
+//    Route::patch('podcasts/{podcast}', 'PodcastsController@update');
+//    Route::delete('podcasts/{podcast}', 'PodcastsController@delete');
+//
+//});
