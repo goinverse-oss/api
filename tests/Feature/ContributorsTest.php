@@ -105,17 +105,6 @@ class ContributorsTest extends ApiTestCase
     }
 
     /**
-     * Test the read podcasts route.
-     */
-    public function testReadPodcasts()
-    {
-        $model = $this->model();
-
-        $this->doReadRelatedResource($model, 'podcasts')
-            ->assertRelatedResourcesResponse(['podcasts']);
-    }
-
-    /**
      * Test the update resource route.
      */
     public function testUpdate()
@@ -146,6 +135,88 @@ class ContributorsTest extends ApiTestCase
 
         $this->doDelete($model)->assertDeleteResponse();
         $this->assertModelDeleted($model);
+    }
+
+    /**
+     * Test the read podcasts route.
+     */
+    public function testReadPodcasts()
+    {
+        $model = $this->model();
+
+        $this->doReadRelatedResources($model, 'podcasts')
+            ->assertRelatedResourcesResponse(['podcasts']);
+    }
+
+    /**
+     * Test the read podcasts route.
+     */
+    public function testAddPodcasts()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->podcasts->all();
+        $relatedModelsToAdd = factory(Podcast::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToAdd as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doAddRelatedResources($model, 'podcasts', 'podcasts', $relatedIds);
+
+        $relationships = [];
+        foreach (array_merge($relatedModels, $relatedModelsToAdd) as $relatedModel) {
+            $relationships[] = ['type' => 'podcasts', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['podcasts'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read podcasts route.
+     */
+    public function testRemovePodcasts()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->podcasts->all();
+        $relatedModelToRemove = array_pop($relatedModels);
+        $response = $this->doRemoveRelatedResources($model, 'podcasts', 'podcasts', [$relatedModelToRemove->getKey()]);
+
+        $relationships = [];
+        foreach ($relatedModels as $relatedModel) {
+            $relationships[] = ['type' => 'podcasts', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['podcasts'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read podcasts route.
+     */
+    public function testReplacePodcasts()
+    {
+        $model = $this->model();
+
+        $relatedModelsToReplaceWith = (array) factory(Podcast::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doReplaceRelatedResources($model, 'podcasts', 'podcasts', $relatedIds);
+
+        $relationships = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relationships[] = ['type' => 'podcasts', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['podcasts'])->assertExactJson([
+            'data' => $relationships
+        ]);
     }
 
     /**

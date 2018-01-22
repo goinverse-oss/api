@@ -27,7 +27,7 @@ class EloquentController extends BaseEloquentController
 
         return $this
             ->reply()
-            ->content($model->{$key});
+            ->relationship($model->{$key});
     }
 
     /**
@@ -47,7 +47,7 @@ class EloquentController extends BaseEloquentController
 
         return $this
             ->reply()
-            ->content($model->{$key});
+            ->relationship($model->{$key});
     }
 
     /**
@@ -71,6 +71,6 @@ class EloquentController extends BaseEloquentController
 
         return $this
             ->reply()
-            ->content($model->{$key});
+            ->relationship($model->{$key});
     }
 }

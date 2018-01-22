@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string url
  * @property string twitter
  * @property string facebook
- * @property Podcast[] podcasts
+ * @property Collection podcasts
  */
 class Contributor extends Model
 {

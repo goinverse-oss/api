@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
- * @property Contributor[] contributors
+ * @property Collection contributors
  */
 class Podcast extends Model
 {
