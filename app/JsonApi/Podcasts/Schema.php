@@ -15,12 +15,17 @@ class Schema extends EloquentSchema
     protected $resourceType = 'podcasts';
 
     /**
+     * @var string
+     */
+    protected $dateFormat = 'U';
+
+    /**
      * @var array
      */
     protected $attributes = [
         'title',
         'description',
-        'image-url',
+        'image_url',
     ];
 
     /**

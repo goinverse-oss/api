@@ -11,8 +11,11 @@ class Hydrator extends EloquentHydrator
      * @var array
      */
     protected $attributes = [
-        'title',
-        'description',
+        'name',
+        'bio',
         'image-url',
+        'url',
+        'twitter',
+        'facebook',
     ];
 }

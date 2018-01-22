@@ -45,11 +45,17 @@ class Validators extends AbstractValidatorProvider
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
-        // no-op
+        $relationships->hasMany(
+            'contributors',
+            'contributors',
+            false,
+            true,
+            null
+            );
     }
 
 }

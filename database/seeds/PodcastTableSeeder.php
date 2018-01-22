@@ -1,7 +1,6 @@
 <?php
 
 use App\Podcast;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class PodcastTableSeeder extends Seeder
@@ -15,14 +14,8 @@ class PodcastTableSeeder extends Seeder
     {
         Podcast::truncate();
 
-        $faker = Factory::create();
-
         for ($i = 0; $i < 3; $i++) {
-            $podcast = Podcast::create([
-                'title' => $faker->sentence,
-                'description' => $faker->paragraph,
-                'image_url' => $faker->imageUrl()
-            ]);
+            Factory(Podcast::class)->create();
         }
     }
 }

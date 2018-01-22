@@ -40,7 +40,7 @@ class Validators extends AbstractValidatorProvider
         return [
             'name' => "$required|string|min:1",
             'bio' => "$required|string|min:1|nullable",
-            'image_url' => "$required|string|min:1|nullable",
+            'image-url' => "$required|string|min:1|nullable",
             'url' => "$required|string|min:1|nullable",
             'twitter' => "$required|string|min:1|nullable",
             'facebook' => "$required|string|min:1|nullable",
@@ -52,7 +52,13 @@ class Validators extends AbstractValidatorProvider
      */
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
-        // no-op
+        $relationships->hasMany(
+            'podcasts',
+            'podcasts',
+            false,
+            true,
+            null
+        );
     }
 
 }

@@ -15,6 +15,11 @@ class Schema extends EloquentSchema
     protected $resourceType = 'contributors';
 
     /**
+     * @var string
+     */
+    protected $dateFormat = 'U';
+
+    /**
      * @var array
      */
     protected $attributes = [
