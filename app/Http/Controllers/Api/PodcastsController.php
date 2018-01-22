@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\JsonApi\Podcasts;
 use App\Podcast;
-use CloudCreativity\LaravelJsonApi\Http\Controllers\EloquentController;
 
 class PodcastsController extends EloquentController
 {

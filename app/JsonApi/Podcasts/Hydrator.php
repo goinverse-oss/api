@@ -15,4 +15,11 @@ class Hydrator extends EloquentHydrator
         'description',
         'image-url',
     ];
+
+    /**
+     * @var array
+     */
+    protected $relationships = [
+        'contributors',
+    ];
 }

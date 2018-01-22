@@ -18,4 +18,11 @@ class Hydrator extends EloquentHydrator
         'twitter',
         'facebook',
     ];
+
+    /**
+     * @var array
+     */
+    protected $relationships = [
+        'podcasts',
+    ];
 }
