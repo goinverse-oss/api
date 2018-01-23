@@ -38,6 +38,7 @@ return [
     | `'posts' => App\Post::class`
     */
     'resources' => [
+        'podcasts' => 'App\Podcast',
     ],
 
     /*

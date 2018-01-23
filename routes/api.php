@@ -15,5 +15,7 @@ use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 */
 
 JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $api) {
-
+    $api->resource('podcasts', [
+        'has-many' => ['contributors'],
+    ]);
 });
