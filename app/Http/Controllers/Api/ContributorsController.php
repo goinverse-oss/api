@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Contributor;
 use App\JsonApi\Contributors;
-use CloudCreativity\LaravelJsonApi\Http\Controllers\EloquentController;
 
 class ContributorsController extends EloquentController
 {

@@ -41,6 +41,15 @@ class Schema extends EloquentSchema
         }
 
         return [
+            'contributors' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::META => function () use ($resource) {
+                    return ['total' => $resource->contributors()->count()];
+                },
+                self::DATA => isset($includeRelationships['contributors']) ?
+                    $resource->contributors : $this->createBelongsToIdentity($resource, 'contributors'),
+            ],
         ];
     }
 
@@ -50,6 +59,7 @@ class Schema extends EloquentSchema
     public function getIncludePaths()
     {
         return [
+            'contributors'
         ];
     }
 }

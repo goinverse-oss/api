@@ -86,6 +86,14 @@ class PodcastsTest extends ApiTestCase
                 'description' => $model->description,
                 'image-url' => $model->image_url
             ],
+            'relationships' => [
+                'contributors' => [
+                    'data' => $contributorsData,
+                    'meta' => [
+                        'total' => count($contributorsData)
+                    ]
+                ]
+            ]
         ];
 
         $this->doRead($model)
@@ -123,6 +131,88 @@ class PodcastsTest extends ApiTestCase
 
         $this->doDelete($model)->assertDeleteResponse();
         $this->assertModelDeleted($model);
+    }
+
+    /**
+     * Test the read contributors route.
+     */
+    public function testReadContributors()
+    {
+        $model = $this->model();
+
+        $this->doReadRelatedResources($model, 'contributors')
+            ->assertRelatedResourcesResponse(['contributors']);
+    }
+
+    /**
+     * Test the read contributors route.
+     */
+    public function testAddContributors()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->contributors->all();
+        $relatedModelsToAdd = factory(Contributor::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToAdd as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doAddRelatedResources($model, 'contributors', 'contributors', $relatedIds);
+
+        $relationships = [];
+        foreach (array_merge($relatedModels, $relatedModelsToAdd) as $relatedModel) {
+            $relationships[] = ['type' => 'contributors', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['contributors'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read contributors route.
+     */
+    public function testRemoveContributors()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->contributors->all();
+        $relatedModelToRemove = array_pop($relatedModels);
+        $response = $this->doRemoveRelatedResources($model, 'contributors', 'contributors', [$relatedModelToRemove->getKey()]);
+
+        $relationships = [];
+        foreach ($relatedModels as $relatedModel) {
+            $relationships[] = ['type' => 'contributors', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['contributors'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read contributors route.
+     */
+    public function testReplaceContributors()
+    {
+        $model = $this->model();
+
+        $relatedModelsToReplaceWith = (array) factory(Contributor::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doReplaceRelatedResources($model, 'contributors', 'contributors', $relatedIds);
+
+        $relationships = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relationships[] = ['type' => 'contributors', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['contributors'])->assertExactJson([
+            'data' => $relationships
+        ]);
     }
 
     /**

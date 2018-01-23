@@ -44,6 +44,14 @@ class Schema extends EloquentSchema
         }
 
         return [
+            'podcasts' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::META => function () use ($resource) {
+                    return ['total' => $resource->podcasts()->count()];
+                },
+                self::DATA => $resource->podcasts,
+            ],
         ];
     }
 
