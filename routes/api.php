@@ -18,4 +18,7 @@ JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $
     $api->resource('podcasts', [
         'has-many' => ['contributors'],
     ]);
+    $api->resource('contributors', [
+        'has-many' => ['podcasts']
+    ]);
 });
