@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string url
  * @property string twitter
  * @property string facebook
+ * @property Collection podcasts
  */
 class Contributor extends Model
 {
@@ -28,4 +30,12 @@ class Contributor extends Model
         'twitter',
         'facebook',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function podcasts()
+    {
+        return $this->morphedByMany('App\Podcast', 'contributable');
+    }
 }
