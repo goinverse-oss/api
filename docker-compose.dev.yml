@@ -5,22 +5,26 @@ services:
       file: docker-compose.base.yml
       service: app
     ports:
-     - "${APP_PORT}:80"
+     - "${APP_EXTERNAL_PORT}:${APP_PORT}"
   mysql:
     extends:
         file: docker-compose.base.yml
         service: mysql
+    restart: always
     ports:
-     - "${DB_PORT}:3306"
+     - "${DB_EXTERNAL_PORT}:${DB_PORT}"
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASS}"
-      MYSQL_DATABASE: "${DB_NAME}"
-      MYSQL_USER: "${DB_USER}"
-      MYSQL_PASSWORD: "${DB_PASS}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
   redis:
     extends:
       file: docker-compose.base.yml
       service: redis
+    ports:
+     - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
+    command: "--port ${REDIS_PORT}"
 networks:
   sdnet:
     driver: "bridge"
