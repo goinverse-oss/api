@@ -21,7 +21,7 @@ cd $(PROJECT_ROOT)
 ./develop up -d
 ```
 
-Then go to [http://localhost](http://localhost) to view the running Laravel app.
+Then go to [http://localhost:8080](http://localhost:8080) to view the running Laravel app.
 
 ## Develop Bash Script
 
