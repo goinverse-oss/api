@@ -10,18 +10,28 @@ Here are the instructions to getting your development environment up and running
 
 You will need Docker. We recommend that you download the app from [here](https://www.docker.com/community-edition). For a great intro tutorial checkout [this](https://docker-curriculum.com).
 
+Also, before running the app for the first time, copy the .env.example file to a file named .env in the project root.
+
 That's it!
 
-### Running the Container
+### Running the App
 
-Once you have Docker installed and the git repo cloned run the `develop` bash script from your project directory.
+Once you have Docker installed, the git repo cloned, and a .env file you can run the `develop` bash script from your project directory.
 
 ```
 cd $(PROJECT_ROOT)
+
+# start the docker containers
 ./develop up -d
+
+# generate a laravel app key
+./develop artisan key:generate
+
+# create and seed the database
+./develop artisan migrate --seed
 ```
 
-Then go to [http://localhost](http://localhost) to view the running Laravel app.
+Then go to [http://localhost:8080](http://localhost:8080) to view the running Laravel app.
 
 ## Develop Bash Script
 
