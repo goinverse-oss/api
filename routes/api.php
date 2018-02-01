@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use CloudCreativity\LaravelJsonApi\Routing\ApiGroup as Api;
+use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $api) {
+    $api->resource('podcasts', [
+        'has-many' => ['contributors'],
+    ]);
+    $api->resource('contributors', [
+        'has-many' => ['podcasts']
+    ]);
 });
