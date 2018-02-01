@@ -1,7 +1,8 @@
 <?php
 
-use App\Podcast;
 use App\Episode;
+use App\Podcast;
+use App\Season;
 use Illuminate\Database\Seeder;
 
 class ContributableTableSeeder extends Seeder
@@ -17,6 +18,10 @@ class ContributableTableSeeder extends Seeder
 
         foreach (Podcast::all() as $podcast) {
             $podcast->contributors()->attach(array_unique([rand(1,10), rand(1,10), rand(1,10)]));
+        }
+
+        foreach (Season::all() as $season) {
+            $season->contributors()->attach(array_unique([rand(1,10), rand(1,10), rand(1,10)]));
         }
 
         foreach (Episode::all() as $episode) {
