@@ -16,10 +16,10 @@ class CreateSeasonsTable extends Migration
         Schema::create('seasons', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->text('description');
-            $table->string('image_url');
+            $table->text('description')->nullable();
+            $table->string('image_url')->nullable();
             $table->integer('number');
-            $table->integer('podcast_id')->unsigned();
+            $table->integer('podcast_id')->unsigned()->nullable();
             $table->foreign('podcast_id')
                 ->references('id')->on('podcasts')
                 ->onDelete('cascade');

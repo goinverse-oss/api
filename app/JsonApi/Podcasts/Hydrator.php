@@ -20,6 +20,7 @@ class Hydrator extends EloquentHydrator
      * @var array
      */
     protected $relationships = [
+        'seasons',
         'contributors',
     ];
 }

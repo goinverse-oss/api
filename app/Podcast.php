@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
+ * @property Collection seasons
  * @property Collection contributors
  */
 class Podcast extends Model
@@ -31,5 +32,13 @@ class Podcast extends Model
     public function contributors()
     {
         return $this->morphToMany('App\Contributor', 'contributable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function seasons()
+    {
+        return $this->hasMany('App\Season');
     }
 }

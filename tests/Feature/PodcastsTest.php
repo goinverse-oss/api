@@ -5,6 +5,7 @@ namespace Tests\Feature;
 
 use App\Contributor;
 use App\Podcast;
+use App\Season;
 
 class PodcastsTest extends ApiTestCase
 {
@@ -50,7 +51,7 @@ class PodcastsTest extends ApiTestCase
             'attributes' => [
                 'title' => $model->title,
                 'description' => $model->description,
-                'image-url' => $model->image_url
+                'image-url' => $model->image_url,
             ],
         ];
 
@@ -76,6 +77,14 @@ class PodcastsTest extends ApiTestCase
             ];
         }
 
+        $seasonsData = [];
+        foreach ($model->seasons as $season) {
+            $seasonsData[] = [
+                'type' => 'seasons',
+                'id' => $season->getKey()
+            ];
+        }
+
         $data = [
             'type' => 'podcasts',
             'id' => $model->getKey(),
@@ -87,6 +96,12 @@ class PodcastsTest extends ApiTestCase
                 'image-url' => $model->image_url
             ],
             'relationships' => [
+                'seasons' => [
+                    'data' => $seasonsData,
+                    'meta' => [
+                        'total' => count($seasonsData)
+                    ]
+                ],
                 'contributors' => [
                     'data' => $contributorsData,
                     'meta' => [
@@ -131,6 +146,17 @@ class PodcastsTest extends ApiTestCase
 
         $this->doDelete($model)->assertDeleteResponse();
         $this->assertModelDeleted($model);
+    }
+
+    /**
+     * Test the read seasons route.
+     */
+    public function testReadSeasons()
+    {
+        $model = $this->model();
+
+        $this->doReadRelatedResources($model, 'seasons')
+            ->assertRelatedResourcesResponse(['seasons']);
     }
 
     /**
@@ -228,6 +254,7 @@ class PodcastsTest extends ApiTestCase
         if($create) {
             $podcast = $builder->create();
             $podcast->contributors()->saveMany(factory(Contributor::class, 2)->create());
+            $podcast->seasons()->saveMany(factory(Season::class, 3)->create());
             return $podcast;
         } else {
             return $builder->make();

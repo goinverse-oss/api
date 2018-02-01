@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
+ * @property integer number
  * @property Collection contributors
  * @property Podcast podcast
  */
