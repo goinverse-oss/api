@@ -45,7 +45,4 @@ domain expertise, or familiarity with a particular part of the code. -->
 
 ## Environment
 
-- App version (or commit SHA):
-- Platform (iOS/Android):
-- Platform OS version:
-- Device:
+- Api version (or commit SHA):

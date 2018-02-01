@@ -1,4 +1,4 @@
-# Contributing to The Liturgists App
+# Contributing to The Liturgists Api
 
 Thanks for being a part of this! Here are a few things you should know before getting started.
 

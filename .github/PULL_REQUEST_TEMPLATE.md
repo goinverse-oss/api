@@ -22,21 +22,17 @@
 
 ## How Has This Been Tested?
 <!--- Please describe in detail how you tested your changes. -->
-<!--- Include details of your testing environment, tests ran to see how -->
-<!--- your change affects other areas of the code, etc. -->
-
-## Screenshots (if appropriate):
-<!--- Showing off your awesome work is encouraged! -->
-<!--- You could also consider a quick demo via animated GIF, -->
-<!--- e.g. using https://giphy.com/apps/giphycapture -->
-<!--- Alternatively, a picture of a cute animal is always nice. -->
+<!--- Did you right unit tests or feature tests for your change? -->
+<!--- What percentage of your changes are covered by your tests? -->
+<!--- Are all other previously written tests still passing? -->
 
 ## Types of changes
 <!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-<!--- NOTE: breaking changes will probably be rare until we've amassed some functionality to break. -->
+<!--- NOTE: Since a breaking change requires an API version bump we try to avoid these whenever possible. -->
+<!--- Please explain here why the breaking change is required. -->
 
 ## Checklist:
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
