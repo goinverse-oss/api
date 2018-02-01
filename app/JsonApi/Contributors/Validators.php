@@ -55,7 +55,8 @@ class Validators extends AbstractValidatorProvider
     {
         $relationships
             ->hasMany('podcasts', 'podcasts', false, true, null)
-            ->hasMany('seasons', 'seasons', false, true, null);
+            ->hasMany('seasons', 'seasons', false, true, null)
+            ->hasMany('episodes', 'episodes', false, true, null);
     }
 
 }

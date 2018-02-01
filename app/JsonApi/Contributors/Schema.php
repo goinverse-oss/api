@@ -60,6 +60,14 @@ class Schema extends EloquentSchema
                 },
                 self::DATA => $resource->seasons
             ],
+            'episodes' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::META => function () use ($resource) {
+                    return ['total' => $resource->seasons()->count()];
+                },
+                self::DATA => $resource->episodes
+            ],
         ];
     }
 
