@@ -46,7 +46,7 @@ class Validators extends AbstractValidatorProvider
             'permalink-url' => "$required|string|min:1|nullable",
             'published-at' => "$required|date:c|nullable",
             'status' => "$required|string|in:published,draft|nullable",
-            'season-episode-number' => "$required|integer|nullable",
+            'number' => "$required|integer|nullable",
         ];
     }
 
@@ -55,13 +55,9 @@ class Validators extends AbstractValidatorProvider
      */
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
-        $relationships->hasMany(
-            'contributors',
-            'contributors',
-            false,
-            true,
-            null
-            );
+        $relationships
+            ->hasOne('season', 'seasons', false, false, null)
+            ->hasMany('contributors', 'contributors', false, true, null);
     }
 
 }

@@ -5,6 +5,8 @@ namespace Tests\Feature;
 
 use App\Contributor;
 use App\Episode;
+use App\Podcast;
+use App\Season;
 
 class EpisodesTest extends ApiTestCase
 {
@@ -56,7 +58,7 @@ class EpisodesTest extends ApiTestCase
                 'permalink-url' => $model->permalink_url,
                 'published-at' => $model->published_at->format('c'),
                 'status' => $model->status,
-                'season-episode-number' => $model->season_episode_number
+                'number' => $model->number
             ],
         ];
 
@@ -73,7 +75,7 @@ class EpisodesTest extends ApiTestCase
             'permalink_url',
             'published_at',
             'status',
-            'season_episode_number',
+            'number',
         ]);
     }
 
@@ -106,7 +108,7 @@ class EpisodesTest extends ApiTestCase
                 'permalink-url' => $model->permalink_url,
                 'published-at' => $model->published_at->format('c'),
                 'status' => $model->status,
-                'season-episode-number' => $model->season_episode_number
+                'number' => $model->number
             ],
             'relationships' => [
                 'contributors' => [
@@ -153,6 +155,64 @@ class EpisodesTest extends ApiTestCase
 
         $this->doDelete($model)->assertDeleteResponse();
         $this->assertModelDeleted($model);
+    }
+
+    /**
+     * Test the read season route.
+     */
+    public function testReadSeason()
+    {
+        $model = $this->model();
+
+        $season = $model->season;
+
+        $contributorsData = [];
+        foreach ($season->contributors as $contributor) {
+            $contributorsData[] = [
+                'type' => 'contributors',
+                'id' => $contributor->getKey()
+            ];
+        }
+
+        $data = [
+            'type' => 'seasons',
+            'id' => $season->getKey(),
+            'attributes' => [
+                'created-at' => $season->created_at->format('c'),
+                'updated-at' => $season->updated_at->format('c'),
+                'title' => $season->title,
+                'description' => $season->description,
+                'image-url' => $season->image_url,
+                'number' => $season->number
+            ],
+            'relationships' => [
+                'podcast' => [
+                    'data' => [
+                        'type' => 'podcasts',
+                        'id' => $season->podcast->getKey(),
+                    ],
+                ],
+                'contributors' => [
+                    'data' => $contributorsData,
+                    'meta' => [
+                        'total' => count($contributorsData)
+                    ]
+                ]
+            ]
+        ];
+
+        $this->doReadRelatedResources($model, 'season')
+            ->assertRelatedResourceResponse($data);
+    }
+
+    public function testUpdateSeason()
+    {
+        $model = $this->model();
+
+        $season = factory(Season::class)->create();
+
+        $this->doUpdateRelateResource($model, 'season', 'seasons', $season->getKey());
+        $this->assertModelPatched($model, ['season'=>$season]);
     }
 
     /**
@@ -249,6 +309,10 @@ class EpisodesTest extends ApiTestCase
 
         if($create) {
             $model = $builder->create();
+            $season = factory(Season::class)->create();
+            $podcast = factory(Podcast::class)->create();
+            $season->podcast()->associate($podcast)->save();
+            $model->season()->associate($season)->save();
             $model->contributors()->saveMany(factory(Contributor::class, 2)->create());
             return $model;
         } else {

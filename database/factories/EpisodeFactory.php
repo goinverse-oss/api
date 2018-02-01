@@ -12,6 +12,6 @@ $factory->define(App\Episode::class, function (Faker $faker) {
         'permalink_url' => $faker->url,
         'published_at' => $faker->date(),
         'status' => $faker->randomElement(['published','draft']),
-        'season_episode_number' => $faker->randomDigitNotNull,
+        'number' => $faker->randomDigitNotNull,
     ];
 });

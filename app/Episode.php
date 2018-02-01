@@ -17,7 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string permalink_url
  * @property \DateTime published_at
  * @property string status
- * @property string season_episode_number
+ * @property string number
+ * @property Season season
  * @property Collection contributors
  */
 class Episode extends Model
@@ -34,7 +35,7 @@ class Episode extends Model
         'permalink_url',
         'published_at',
         'status',
-        'season_episode_number',
+        'number',
     ];
 
     protected $dates = [
@@ -49,5 +50,13 @@ class Episode extends Model
     public function contributors()
     {
         return $this->morphToMany('App\Contributor', 'contributable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function season()
+    {
+        return $this->belongsTo('App\Season');
     }
 }

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string image_url
  * @property integer number
  * @property Collection contributors
+ * @property Collection episodes
  * @property Podcast podcast
  */
 class Season extends Model
@@ -42,5 +43,13 @@ class Season extends Model
     public function podcast()
     {
         return $this->belongsTo('App\Podcast');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function episodes()
+    {
+        return $this->hasMany('App\Episode');
     }
 }

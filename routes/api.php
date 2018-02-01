@@ -20,9 +20,10 @@ JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $
     ]);
     $api->resource('seasons', [
         'has-one' => ['podcast'],
-        'has-many' => ['contributors'],
+        'has-many' => ['episodes','contributors'],
     ]);
     $api->resource('episodes', [
+        'has-one' => ['season'],
         'has-many' => ['contributors'],
     ]);
     $api->resource('contributors', [

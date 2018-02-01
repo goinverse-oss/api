@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 
 use App\Contributor;
+use App\Episode;
 use App\Podcast;
 use App\Season;
 
@@ -85,8 +86,8 @@ class SeasonsTest extends ApiTestCase
             'type' => 'seasons',
             'id' => $model->getKey(),
             'attributes' => [
-                'created-at' => $model->created_at->getTimestamp(),
-                'updated-at' => $model->updated_at->getTimestamp(),
+                'created-at' => $model->created_at->format('c'),
+                'updated-at' => $model->updated_at->format('c'),
                 'title' => $model->title,
                 'description' => $model->description,
                 'image-url' => $model->image_url,
@@ -174,8 +175,8 @@ class SeasonsTest extends ApiTestCase
             'type' => 'podcasts',
             'id' => $podcast->getKey(),
             'attributes' => [
-                'created-at' => $podcast->created_at->getTimestamp(),
-                'updated-at' => $podcast->updated_at->getTimestamp(),
+                'created-at' => $podcast->created_at->format('c'),
+                'updated-at' => $podcast->updated_at->format('c'),
                 'title' => $podcast->title,
                 'description' => $podcast->description,
                 'image-url' => $podcast->image_url
@@ -209,6 +210,17 @@ class SeasonsTest extends ApiTestCase
 
         $this->doUpdateRelateResource($model, 'podcast', 'podcasts', $podcast->getKey());
         $this->assertModelPatched($model, ['podcast'=>$podcast]);
+    }
+
+    /**
+     * Test the read episodes route.
+     */
+    public function testReadEpisodes()
+    {
+        $model = $this->model();
+
+        $this->doReadRelatedResources($model, 'episodes')
+            ->assertRelatedResourcesResponse(['episodes']);
     }
 
     /**
@@ -307,6 +319,7 @@ class SeasonsTest extends ApiTestCase
             /** @var Season $season */
             $season = $builder->create();
             $season->podcast()->associate(factory(Podcast::class)->create())->save();
+            $season->episodes()->saveMany(factory(Episode::class, 3)->create());
             $season->contributors()->saveMany(factory(Contributor::class, 2)->create());
             return $season;
         } else {

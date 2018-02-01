@@ -19,13 +19,14 @@ class Hydrator extends EloquentHydrator
         'permalink-url',
         'published-at',
         'status',
-        'season-episode-number',
+        'number',
     ];
 
     /**
      * @var array
      */
     protected $relationships = [
+        'season',
         'contributors',
     ];
 }

@@ -31,7 +31,7 @@ class Schema extends EloquentSchema
         'permalink_url',
         'published_at',
         'status',
-        'season_episode_number',
+        'number',
     ];
 
     /**
@@ -47,14 +47,18 @@ class Schema extends EloquentSchema
         }
 
         return [
+            'season' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::DATA => $resource->season,
+            ],
             'contributors' => [
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
                 self::META => function () use ($resource) {
                     return ['total' => $resource->contributors()->count()];
                 },
-                self::DATA => isset($includeRelationships['contributors']) ?
-                    $resource->contributors : $this->createBelongsToIdentity($resource, 'contributors'),
+                self::DATA => $resource->contributors,
             ],
         ];
     }
@@ -64,8 +68,6 @@ class Schema extends EloquentSchema
      */
     public function getIncludePaths()
     {
-        return [
-            'contributors'
-        ];
+        return [];
     }
 }

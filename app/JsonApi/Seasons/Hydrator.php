@@ -22,6 +22,7 @@ class Hydrator extends EloquentHydrator
      */
     protected $relationships = [
         'podcast',
+        'episodes',
         'contributors',
     ];
 }

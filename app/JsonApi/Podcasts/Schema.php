@@ -17,7 +17,7 @@ class Schema extends EloquentSchema
     /**
      * @var string
      */
-    protected $dateFormat = 'U';
+    protected $dateFormat = 'c';
 
     /**
      * @var array
