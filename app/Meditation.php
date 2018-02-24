@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
+ * @property string media_url
+ * @property \DateTime published_at
+ * @property string status Either "publish" or "draft"
  * @property Collection contributors
- * @property Collection meditations
  */
-class Category extends Model
+class Meditation extends Model
 {
     /**
      * @var array
@@ -23,7 +25,10 @@ class Category extends Model
     protected $fillable = [
         'title',
         'description',
-        'image_url'
+        'image_url',
+        'media_url',
+        'published_at',
+        'status'
     ];
 
     /**
@@ -34,8 +39,11 @@ class Category extends Model
         return $this->morphToMany('App\Contributor', 'contributable');
     }
 
-    public function meditations()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
     {
-        return $this->hasMany('App\Meditation');
+        return $this->belongsTo('App\Category');
     }
 }

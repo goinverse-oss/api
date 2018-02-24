@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ContributorTableSeeder::class);
         $this->call(PodcastTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
+        $this->call(MeditationTableSeeder::class);
         $this->call(ContributableTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
