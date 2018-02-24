@@ -40,6 +40,7 @@ return [
     'resources' => [
         'contributors' => 'App\Contributor',
         'podcasts' => 'App\Podcast',
+        'categories' => 'App\Category',
     ],
 
     /*
