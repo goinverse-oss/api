@@ -9,7 +9,7 @@ class PodcastsController extends EloquentController
 {
 
     /**
-     * PostsController constructor.
+     * PodcastsController constructor.
      *
      * @param Podcasts\Hydrator $hydrator
      */

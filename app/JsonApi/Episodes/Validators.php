@@ -1,6 +1,6 @@
 <?php
 
-namespace App\JsonApi\Contributors;
+namespace App\JsonApi\Episodes;
 
 use CloudCreativity\JsonApi\Contracts\Validators\RelationshipsValidatorInterface;
 use CloudCreativity\LaravelJsonApi\Validators\AbstractValidatorProvider;
@@ -11,7 +11,7 @@ class Validators extends AbstractValidatorProvider
     /**
      * @var string
      */
-    protected $resourceType = 'contributors';
+    protected $resourceType = 'episodes';
 
     /**
      * @var array
@@ -24,8 +24,7 @@ class Validators extends AbstractValidatorProvider
      * @var array
      */
     protected $allowedIncludePaths = [
-        'podcasts',
-        'seasons'
+        'contributors'
     ];
 
     /**
@@ -39,24 +38,26 @@ class Validators extends AbstractValidatorProvider
          * @see https://laravel.com/docs/5.5/validation#available-validation-rules
          */
         return [
-            'name' => "$required|string|min:1",
-            'bio' => "$required|string|min:1|nullable",
+            'title' => "$required|string|min:1",
+            'description' => "$required|string|min:1|nullable",
             'image-url' => "$required|string|min:1|nullable",
-            'url' => "$required|string|min:1|nullable",
-            'twitter' => "$required|string|min:1|nullable",
-            'facebook' => "$required|string|min:1|nullable",
+            'media-url' => "$required|string|min:1|nullable",
+            'player-url' => "$required|string|min:1|nullable",
+            'permalink-url' => "$required|string|min:1|nullable",
+            'published-at' => "$required|date:c|nullable",
+            'status' => "$required|string|in:published,draft|nullable",
+            'number' => "$required|integer|nullable",
         ];
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
         $relationships
-            ->hasMany('podcasts', 'podcasts', false, true, null)
-            ->hasMany('seasons', 'seasons', false, true, null)
-            ->hasMany('episodes', 'episodes', false, true, null);
+            ->hasOne('season', 'seasons', false, false, null)
+            ->hasMany('contributors', 'contributors', false, true, null);
     }
 
 }

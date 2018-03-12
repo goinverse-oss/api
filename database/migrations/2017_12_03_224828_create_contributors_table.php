@@ -16,8 +16,8 @@ class CreateContributorsTable extends Migration
         Schema::create('contributors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->text('bio');
-            $table->text('image_url');
+            $table->text('bio')->nullable();
+            $table->text('image_url')->nullable();
             $table->string('url')->nullable();
             $table->string('twitter')->nullable();
             $table->string('facebook')->nullable();

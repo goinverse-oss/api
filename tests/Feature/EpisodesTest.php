@@ -4,22 +4,23 @@ namespace Tests\Feature;
 
 
 use App\Contributor;
+use App\Episode;
 use App\Podcast;
 use App\Season;
 
-class PodcastsTest extends ApiTestCase
+class EpisodesTest extends ApiTestCase
 {
     /**
      * @var string
      */
-    protected $resourceType = 'podcasts';
+    protected $resourceType = 'episodes';
 
     /**
      * Test the search route.
      */
     public function testSearch()
     {
-        // ensure there is at least one podcast in the database
+        // ensure there is at least one episode in the database
         $this->model();
 
         $this->doSearch()
@@ -31,8 +32,8 @@ class PodcastsTest extends ApiTestCase
      */
     public function testSearchById()
     {
-        $models = factory(Podcast::class, 2)->create();
-        // This podcast should not be returned in the results
+        $models = factory(Episode::class, 2)->create();
+        // This episode should not be returned in the results
         $this->model();
 
         $this->doSearchById($models)
@@ -47,11 +48,17 @@ class PodcastsTest extends ApiTestCase
         $model = $this->model(false);
 
         $data = [
-            'type' => 'podcasts',
+            'type' => 'episodes',
             'attributes' => [
                 'title' => $model->title,
                 'description' => $model->description,
                 'image-url' => $model->image_url,
+                'media-url' => $model->media_url,
+                'player-url' => $model->player_url,
+                'permalink-url' => $model->permalink_url,
+                'published-at' => $model->published_at->format('c'),
+                'status' => $model->status,
+                'number' => $model->number
             ],
         ];
 
@@ -59,7 +66,17 @@ class PodcastsTest extends ApiTestCase
             ->doCreate($data)
             ->assertCreateResponse($data);
 
-        $this->assertModelCreated($model, $id, ['title', 'description', 'image_url']);
+        $this->assertModelCreated($model, $id, [
+            'title',
+            'description',
+            'image_url',
+            'media_url',
+            'player_url',
+            'permalink_url',
+            'published_at',
+            'status',
+            'number',
+        ]);
     }
 
     /**
@@ -77,31 +94,23 @@ class PodcastsTest extends ApiTestCase
             ];
         }
 
-        $seasonsData = [];
-        foreach ($model->seasons as $season) {
-            $seasonsData[] = [
-                'type' => 'seasons',
-                'id' => $season->getKey()
-            ];
-        }
-
         $data = [
-            'type' => 'podcasts',
+            'type' => 'episodes',
             'id' => $model->getKey(),
             'attributes' => [
                 'created-at' => $model->created_at->format('c'),
                 'updated-at' => $model->updated_at->format('c'),
                 'title' => $model->title,
                 'description' => $model->description,
-                'image-url' => $model->image_url
+                'image-url' => $model->image_url,
+                'media-url' => $model->media_url,
+                'player-url' => $model->player_url,
+                'permalink-url' => $model->permalink_url,
+                'published-at' => $model->published_at->format('c'),
+                'status' => $model->status,
+                'number' => $model->number
             ],
             'relationships' => [
-                'seasons' => [
-                    'data' => $seasonsData,
-                    'meta' => [
-                        'total' => count($seasonsData)
-                    ]
-                ],
                 'contributors' => [
                     'data' => $contributorsData,
                     'meta' => [
@@ -123,7 +132,7 @@ class PodcastsTest extends ApiTestCase
         $model = $this->model();
 
         $data = [
-            'type' => 'podcasts',
+            'type' => 'episodes',
             'id' => (string) $model->getKey(),
             'attributes' => [
                 'title' => 'Foo',
@@ -149,14 +158,61 @@ class PodcastsTest extends ApiTestCase
     }
 
     /**
-     * Test the read seasons route.
+     * Test the read season route.
      */
-    public function testReadSeasons()
+    public function testReadSeason()
     {
         $model = $this->model();
 
-        $this->doReadRelatedResources($model, 'seasons')
-            ->assertRelatedResourcesResponse(['seasons']);
+        $season = $model->season;
+
+        $contributorsData = [];
+        foreach ($season->contributors as $contributor) {
+            $contributorsData[] = [
+                'type' => 'contributors',
+                'id' => $contributor->getKey()
+            ];
+        }
+
+        $data = [
+            'type' => 'seasons',
+            'id' => $season->getKey(),
+            'attributes' => [
+                'created-at' => $season->created_at->format('c'),
+                'updated-at' => $season->updated_at->format('c'),
+                'title' => $season->title,
+                'description' => $season->description,
+                'image-url' => $season->image_url,
+                'number' => $season->number
+            ],
+            'relationships' => [
+                'podcast' => [
+                    'data' => [
+                        'type' => 'podcasts',
+                        'id' => $season->podcast->getKey(),
+                    ],
+                ],
+                'contributors' => [
+                    'data' => $contributorsData,
+                    'meta' => [
+                        'total' => count($contributorsData)
+                    ]
+                ]
+            ]
+        ];
+
+        $this->doReadRelatedResources($model, 'season')
+            ->assertRelatedResourceResponse($data);
+    }
+
+    public function testUpdateSeason()
+    {
+        $model = $this->model();
+
+        $season = factory(Season::class)->create();
+
+        $this->doUpdateRelateResource($model, 'season', 'seasons', $season->getKey());
+        $this->assertModelPatched($model, ['season'=>$season]);
     }
 
     /**
@@ -245,17 +301,20 @@ class PodcastsTest extends ApiTestCase
      * This is just a helper so that we get a type hinted model back.
      *
      * @param bool $create
-     * @return Podcast
+     * @return Episode
      */
     protected function model($create = true)
     {
-        $builder = factory(Podcast::class);
+        $builder = factory(Episode::class);
 
         if($create) {
-            $podcast = $builder->create();
-            $podcast->contributors()->saveMany(factory(Contributor::class, 2)->create());
-            $podcast->seasons()->saveMany(factory(Season::class, 3)->create());
-            return $podcast;
+            $model = $builder->create();
+            $season = factory(Season::class)->create();
+            $podcast = factory(Podcast::class)->create();
+            $season->podcast()->associate($podcast)->save();
+            $model->season()->associate($season)->save();
+            $model->contributors()->saveMany(factory(Contributor::class, 2)->create());
+            return $model;
         } else {
             return $builder->make();
         }

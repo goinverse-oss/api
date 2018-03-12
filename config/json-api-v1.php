@@ -41,6 +41,8 @@ return [
         'contributors' => 'App\Contributor',
         'podcasts' => 'App\Podcast',
         'categories' => 'App\Category',
+        'seasons' => 'App\Season',
+        'episodes' => 'App\Episode',
     ],
 
     /*
