@@ -89,8 +89,8 @@ class PodcastsTest extends ApiTestCase
             'type' => 'podcasts',
             'id' => $model->getKey(),
             'attributes' => [
-                'created-at' => $model->created_at->getTimestamp(),
-                'updated-at' => $model->updated_at->getTimestamp(),
+                'created-at' => $model->created_at->format('c'),
+                'updated-at' => $model->updated_at->format('c'),
                 'title' => $model->title,
                 'description' => $model->description,
                 'image-url' => $model->image_url

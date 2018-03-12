@@ -25,5 +25,6 @@ class Hydrator extends EloquentHydrator
     protected $relationships = [
         'podcasts',
         'seasons',
+        'episodes',
     ];
 }
