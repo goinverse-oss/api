@@ -24,6 +24,7 @@ class Validators extends AbstractValidatorProvider
      * @var array
      */
     protected $allowedIncludePaths = [
+        'seasons',
         'contributors'
     ];
 
@@ -49,13 +50,9 @@ class Validators extends AbstractValidatorProvider
      */
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
-        $relationships->hasMany(
-            'contributors',
-            'contributors',
-            false,
-            true,
-            null
-            );
+        $relationships
+            ->hasMany('seasons', 'seasons', false, true, null)
+            ->hasMany('contributors', 'contributors', false, true, null);
     }
 
 }

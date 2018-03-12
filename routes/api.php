@@ -16,9 +16,17 @@ use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 
 JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $api) {
     $api->resource('podcasts', [
+        'has-many' => ['seasons','contributors'],
+    ]);
+    $api->resource('seasons', [
+        'has-one' => ['podcast'],
+        'has-many' => ['episodes','contributors'],
+    ]);
+    $api->resource('episodes', [
+        'has-one' => ['season'],
         'has-many' => ['contributors'],
     ]);
     $api->resource('contributors', [
-        'has-many' => ['podcasts']
+        'has-many' => ['podcasts','seasons','episodes']
     ]);
 });

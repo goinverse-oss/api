@@ -12,10 +12,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
- * @property Collection seasons
+ * @property string media_url
+ * @property string player_url
+ * @property string permalink_url
+ * @property \DateTime published_at
+ * @property string status
+ * @property string number
+ * @property Season season
  * @property Collection contributors
  */
-class Podcast extends Model
+class Episode extends Model
 {
     /**
      * @var array
@@ -23,7 +29,19 @@ class Podcast extends Model
     protected $fillable = [
         'title',
         'description',
-        'image_url'
+        'image_url',
+        'media_url',
+        'player_url',
+        'permalink_url',
+        'published_at',
+        'status',
+        'number',
+    ];
+
+    protected $dates = [
+        'published_at',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -35,10 +53,10 @@ class Podcast extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function seasons()
+    public function season()
     {
-        return $this->hasMany('App\Season');
+        return $this->belongsTo('App\Season');
     }
 }

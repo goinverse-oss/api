@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 
 use App\Contributor;
+use App\Episode;
 use App\Podcast;
+use App\Season;
 
 class ContributorsTest extends ApiTestCase
 {
@@ -78,6 +80,20 @@ class ContributorsTest extends ApiTestCase
                 'id' => $podcast->getKey()
             ];
         }
+        $seasonsData = [];
+        foreach ($model->seasons as $season) {
+            $seasonsData[] = [
+                'type' => 'seasons',
+                'id' => $season->getKey()
+            ];
+        }
+        $episodesData = [];
+        foreach ($model->episodes as $episode) {
+            $episodesData[] = [
+                'type' => 'episodes',
+                'id' => $episode->getKey()
+            ];
+        }
 
         $data = [
             'type' => 'contributors',
@@ -96,7 +112,19 @@ class ContributorsTest extends ApiTestCase
                     'meta' => [
                         'total' => count($podcastsData)
                     ]
-                ]
+                ],
+                'seasons' => [
+                    'data' => $seasonsData,
+                    'meta' => [
+                        'total' => count($seasonsData)
+                    ]
+                ],
+                'episodes' => [
+                    'data' => $episodesData,
+                    'meta' => [
+                        'total' => count($episodesData)
+                    ]
+                ],
             ]
         ];
 
@@ -220,6 +248,170 @@ class ContributorsTest extends ApiTestCase
     }
 
     /**
+     * Test the read seasons route.
+     */
+    public function testReadSeasons()
+    {
+        $model = $this->model();
+
+        $this->doReadRelatedResources($model, 'seasons')
+            ->assertRelatedResourcesResponse(['seasons']);
+    }
+
+    /**
+     * Test the read seasons route.
+     */
+    public function testAddSeasons()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->seasons->all();
+        $relatedModelsToAdd = factory(Season::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToAdd as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doAddRelatedResources($model, 'seasons', 'seasons', $relatedIds);
+
+        $relationships = [];
+        foreach (array_merge($relatedModels, $relatedModelsToAdd) as $relatedModel) {
+            $relationships[] = ['type' => 'seasons', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['seasons'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read seasons route.
+     */
+    public function testRemoveSeasons()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->seasons->all();
+        $relatedModelToRemove = array_pop($relatedModels);
+        $response = $this->doRemoveRelatedResources($model, 'seasons', 'seasons', [$relatedModelToRemove->getKey()]);
+
+        $relationships = [];
+        foreach ($relatedModels as $relatedModel) {
+            $relationships[] = ['type' => 'seasons', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['seasons'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read seasons route.
+     */
+    public function testReplaceSeasons()
+    {
+        $model = $this->model();
+
+        $relatedModelsToReplaceWith = (array) factory(Season::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doReplaceRelatedResources($model, 'seasons', 'seasons', $relatedIds);
+
+        $relationships = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relationships[] = ['type' => 'seasons', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['seasons'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read episodes route.
+     */
+    public function testReadEpisodes()
+    {
+        $model = $this->model();
+
+        $this->doReadRelatedResources($model, 'episodes')
+            ->assertRelatedResourcesResponse(['episodes']);
+    }
+
+    /**
+     * Test the read episodes route.
+     */
+    public function testAddEpisodes()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->episodes->all();
+        $relatedModelsToAdd = factory(Episode::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToAdd as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doAddRelatedResources($model, 'episodes', 'episodes', $relatedIds);
+
+        $relationships = [];
+        foreach (array_merge($relatedModels, $relatedModelsToAdd) as $relatedModel) {
+            $relationships[] = ['type' => 'episodes', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['episodes'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read episodes route.
+     */
+    public function testRemoveEpisodes()
+    {
+        $model = $this->model();
+
+        $relatedModels = $model->episodes->all();
+        $relatedModelToRemove = array_pop($relatedModels);
+        $response = $this->doRemoveRelatedResources($model, 'episodes', 'episodes', [$relatedModelToRemove->getKey()]);
+
+        $relationships = [];
+        foreach ($relatedModels as $relatedModel) {
+            $relationships[] = ['type' => 'episodes', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['episodes'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
+     * Test the read episodes route.
+     */
+    public function testReplaceEpisodes()
+    {
+        $model = $this->model();
+
+        $relatedModelsToReplaceWith = (array) factory(Episode::class, 3)->create()->all();
+
+        $relatedIds = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relatedIds[] = $relatedModel->getKey();
+        }
+
+        $response = $this->doReplaceRelatedResources($model, 'episodes', 'episodes', $relatedIds);
+
+        $relationships = [];
+        foreach ($relatedModelsToReplaceWith as $relatedModel) {
+            $relationships[] = ['type' => 'episodes', 'id' => (string) $relatedModel->getKey()];
+        }
+        $response->assertRelatedResourcesResponse(['episodes'])->assertExactJson([
+            'data' => $relationships
+        ]);
+    }
+
+    /**
      * This is just a helper so that we get a type hinted model back.
      *
      * @param bool $create
@@ -232,6 +424,8 @@ class ContributorsTest extends ApiTestCase
         if($create) {
             $contributor = $builder->create();
             $contributor->podcasts()->saveMany(factory(Podcast::class, 2)->create());
+            $contributor->seasons()->saveMany(factory(Season::class, 2)->create());
+            $contributor->episodes()->saveMany(factory(Episode::class, 2)->create());
             return $contributor;
         } else {
             return $builder->make();

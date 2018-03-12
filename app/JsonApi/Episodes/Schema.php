@@ -1,8 +1,8 @@
 <?php
 
-namespace App\JsonApi\Podcasts;
+namespace App\JsonApi\Episodes;
 
-use App\Podcast;
+use App\Episode;
 use CloudCreativity\JsonApi\Exceptions\RuntimeException;
 use CloudCreativity\LaravelJsonApi\Schema\EloquentSchema;
 
@@ -12,7 +12,7 @@ class Schema extends EloquentSchema
     /**
      * @var string
      */
-    protected $resourceType = 'podcasts';
+    protected $resourceType = 'episodes';
 
     /**
      * @var string
@@ -26,6 +26,12 @@ class Schema extends EloquentSchema
         'title',
         'description',
         'image_url',
+        'media_url',
+        'player_url',
+        'permalink_url',
+        'published_at',
+        'status',
+        'number',
     ];
 
     /**
@@ -36,18 +42,15 @@ class Schema extends EloquentSchema
      */
     public function getRelationships($resource, $isPrimary, array $includeRelationships)
     {
-        if (!$resource instanceof Podcast) {
-            throw new RuntimeException('Expecting a podcast model.');
+        if (!$resource instanceof Episode) {
+            throw new RuntimeException('Expecting an episode model.');
         }
 
         return [
-            'seasons' => [
+            'season' => [
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
-                self::META => function () use ($resource) {
-                    return ['total' => $resource->seasons()->count()];
-                },
-                self::DATA => $resource->seasons
+                self::DATA => $resource->season,
             ],
             'contributors' => [
                 self::SHOW_SELF => true,
@@ -55,7 +58,7 @@ class Schema extends EloquentSchema
                 self::META => function () use ($resource) {
                     return ['total' => $resource->contributors()->count()];
                 },
-                self::DATA => $resource->contributors
+                self::DATA => $resource->contributors,
             ],
         ];
     }

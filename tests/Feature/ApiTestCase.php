@@ -23,6 +23,25 @@ class ApiTestCase extends BaseTestCase
     /**
      * @param mixed $resourceId
      * @param string $relationshipKey
+     * @param string $relatedType
+     * @param mixed $relatedId
+     * @param array $params
+     * @param array $headers
+     * @return TestResponse
+     */
+    protected function doUpdateRelateResource($resourceId, $relationshipKey, $relatedType, $relatedId, array $params = [], array $headers = [])
+    {
+        $params = $this->addDefaultRouteParams($params);
+        $uri = $this->api()->url()->readRelationship($this->resourceType(), $resourceId, $relationshipKey, $params);
+
+        $data = ['type' => $relatedType, 'id' => (string) $relatedId];
+
+        return $this->postJsonApi($uri, ['data' => $data], $headers);
+    }
+
+    /**
+     * @param mixed $resourceId
+     * @param string $relationshipKey
      * @param array $params
      * @param array $headers
      * @return TestResponse
