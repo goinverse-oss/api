@@ -46,9 +46,6 @@ class SeasonsTest extends ApiTestCase
     {
         $model = $this->model(false);
 
-        /** @var Podcast $podcast */
-        $podcast = factory(Podcast::class)->create();
-
         $data = [
             'type' => 'seasons',
             'attributes' => [
