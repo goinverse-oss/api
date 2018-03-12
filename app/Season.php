@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
- * @property Collection seasons
+ * @property integer number
  * @property Collection contributors
+ * @property Podcast podcast
  */
-class Podcast extends Model
+class Season extends Model
 {
     /**
      * @var array
@@ -23,7 +24,8 @@ class Podcast extends Model
     protected $fillable = [
         'title',
         'description',
-        'image_url'
+        'image_url',
+        'number',
     ];
 
     /**
@@ -35,10 +37,10 @@ class Podcast extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function seasons()
+    public function podcast()
     {
-        return $this->hasMany('App\Season');
+        return $this->belongsTo('App\Podcast');
     }
 }

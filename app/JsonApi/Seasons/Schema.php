@@ -1,8 +1,8 @@
 <?php
 
-namespace App\JsonApi\Contributors;
+namespace App\JsonApi\Seasons;
 
-use App\Contributor;
+use App\Season;
 use CloudCreativity\JsonApi\Exceptions\RuntimeException;
 use CloudCreativity\LaravelJsonApi\Schema\EloquentSchema;
 
@@ -12,7 +12,7 @@ class Schema extends EloquentSchema
     /**
      * @var string
      */
-    protected $resourceType = 'contributors';
+    protected $resourceType = 'seasons';
 
     /**
      * @var string
@@ -23,12 +23,10 @@ class Schema extends EloquentSchema
      * @var array
      */
     protected $attributes = [
-        'name',
-        'bio',
+        'title',
+        'description',
         'image_url',
-        'url',
-        'twitter',
-        'facebook',
+        'number'
     ];
 
     /**
@@ -39,26 +37,23 @@ class Schema extends EloquentSchema
      */
     public function getRelationships($resource, $isPrimary, array $includeRelationships)
     {
-        if (!$resource instanceof Contributor) {
-            throw new RuntimeException('Expecting a contributor model.');
+        if (!$resource instanceof Season) {
+            throw new RuntimeException('Expecting a season model.');
         }
 
         return [
-            'podcasts' => [
+            'podcast' => [
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
-                self::META => function () use ($resource) {
-                    return ['total' => $resource->podcasts()->count()];
-                },
-                self::DATA => $resource->podcasts,
+                self::DATA => $resource->podcast,
             ],
-            'seasons' => [
+            'contributors' => [
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
                 self::META => function () use ($resource) {
-                    return ['total' => $resource->seasons()->count()];
+                    return ['total' => $resource->contributors()->count()];
                 },
-                self::DATA => $resource->seasons
+                self::DATA => $resource->contributors,
             ],
         ];
     }

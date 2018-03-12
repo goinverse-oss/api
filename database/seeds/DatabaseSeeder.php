@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ContributorTableSeeder::class);
         $this->call(PodcastTableSeeder::class);
+        $this->call(SeasonTableSeeder::class);
         $this->call(ContributableTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
