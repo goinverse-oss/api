@@ -1,6 +1,6 @@
 <?php
 
-namespace App\JsonApi\Seasons;
+namespace App\JsonApi\Episodes;
 
 use CloudCreativity\LaravelJsonApi\Hydrator\EloquentHydrator;
 
@@ -14,6 +14,11 @@ class Hydrator extends EloquentHydrator
         'title',
         'description',
         'image-url',
+        'media-url',
+        'player-url',
+        'permalink-url',
+        'published-at',
+        'status',
         'number',
     ];
 
@@ -21,8 +26,7 @@ class Hydrator extends EloquentHydrator
      * @var array
      */
     protected $relationships = [
-        'podcast',
-        'episodes',
+        'season',
         'contributors',
     ];
 }

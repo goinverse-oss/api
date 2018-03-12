@@ -12,12 +12,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string title
  * @property string description
  * @property string image_url
- * @property integer number
+ * @property string media_url
+ * @property string player_url
+ * @property string permalink_url
+ * @property \DateTime published_at
+ * @property string status
+ * @property string number
+ * @property Season season
  * @property Collection contributors
- * @property Collection episodes
- * @property Podcast podcast
  */
-class Season extends Model
+class Episode extends Model
 {
     /**
      * @var array
@@ -26,7 +30,18 @@ class Season extends Model
         'title',
         'description',
         'image_url',
+        'media_url',
+        'player_url',
+        'permalink_url',
+        'published_at',
+        'status',
         'number',
+    ];
+
+    protected $dates = [
+        'published_at',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -40,16 +55,8 @@ class Season extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function podcast()
+    public function season()
     {
-        return $this->belongsTo('App\Podcast');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function episodes()
-    {
-        return $this->hasMany('App\Episode');
+        return $this->belongsTo('App\Season');
     }
 }

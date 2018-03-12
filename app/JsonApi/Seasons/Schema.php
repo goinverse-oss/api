@@ -17,7 +17,7 @@ class Schema extends EloquentSchema
     /**
      * @var string
      */
-    protected $dateFormat = 'U';
+    protected $dateFormat = 'c';
 
     /**
      * @var array
@@ -46,6 +46,14 @@ class Schema extends EloquentSchema
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
                 self::DATA => $resource->podcast,
+            ],
+            'episodes' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::META => function () use ($resource) {
+                    return ['total' => $resource->episodes()->count()];
+                },
+                self::DATA => $resource->episodes,
             ],
             'contributors' => [
                 self::SHOW_SELF => true,
