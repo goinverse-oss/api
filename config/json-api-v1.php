@@ -39,10 +39,13 @@ return [
     */
     'resources' => [
         'contributors' => 'App\Contributor',
+
         'podcasts' => 'App\Podcast',
-        'categories' => 'App\Category',
         'seasons' => 'App\Season',
         'episodes' => 'App\Episode',
+
+        'categories' => 'App\Category',
+        'meditations' => 'App\Meditation',
     ],
 
     /*

@@ -68,6 +68,22 @@ class Schema extends EloquentSchema
                 },
                 self::DATA => $resource->episodes
             ],
+            'categories' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::META => function () use ($resource) {
+                    return ['total' => $resource->categories()->count()];
+                },
+                self::DATA => $resource->categories
+            ],
+            'meditations' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::META => function () use ($resource) {
+                    return ['total' => $resource->meditations()->count()];
+                },
+                self::DATA => $resource->meditations
+            ],
         ];
     }
 

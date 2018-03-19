@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection podcasts
  * @property Collection seasons
  * @property Collection episodes
+ * @property Collection categories
+ * @property Collection meditations
  */
 class Contributor extends Model
 {
@@ -55,5 +57,21 @@ class Contributor extends Model
     public function episodes()
     {
         return $this->morphedByMany('App\Episode', 'contributable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function categories()
+    {
+        return $this->morphedByMany('App\Category', 'contributable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function meditations()
+    {
+        return $this->morphedByMany('App\Meditation', 'contributable');
     }
 }
