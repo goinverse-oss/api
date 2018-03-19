@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ContributorTableSeeder::class);
         $this->call(PodcastTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
+        $this->call(MeditationTableSeeder::class);
         $this->call(SeasonTableSeeder::class);
         $this->call(EpisodeTableSeeder::class);
         $this->call(ContributableTableSeeder::class);
