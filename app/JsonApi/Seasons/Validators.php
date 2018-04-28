@@ -52,7 +52,7 @@ class Validators extends AbstractValidatorProvider
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
         $relationships
-            ->hasOne('podcast', 'podcasts', false, false, null)
+            ->hasOne('podcast', 'podcasts', false, true, null)
             ->hasMany('contributors', 'contributors', false, true, null);
     }
 
