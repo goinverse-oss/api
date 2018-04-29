@@ -14,6 +14,10 @@ use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 |
 */
 
+Route::prefix('v1')->group(function() {
+    Route::post('register', 'Api\RegisterController@registerUser');
+});
+
 JsonApi::register('v1', ['namespace' => 'Api', 'id' => '[\d]+'], function (Api $api) {
     $api->resource('podcasts', [
         'has-many' => ['seasons','contributors'],
