@@ -13,10 +13,16 @@ class Hydrator extends EloquentHydrator
     protected $attributes = [
         'title',
         'description',
-        'image_url',
-        'media_url',
-        'published_at',
+        'image-url',
+        'media-url',
+        'published-at',
         'status',
+    ];
+
+    protected $dates = [
+        'created-at',
+        'updated-at',
+        'published-at',
     ];
 
     /**

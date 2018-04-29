@@ -43,8 +43,8 @@ class Validators extends AbstractValidatorProvider
             'description' => "$required|string|min:1|nullable",
             'image-url' => "$required|string|min:1|nullable",
             'media-url' => "$required|string|min:1|nullable",
-            'published-at' => "$required|date:c|nullable",
-            'status' => "$required|string|in:published,draft|nullable",
+            'published-at' => "date|nullable",
+            'status' => "$required|string|in:publish,draft|nullable",
         ];
     }
 
@@ -54,7 +54,7 @@ class Validators extends AbstractValidatorProvider
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
         $relationships
-            ->hasOne('category', 'categories', false, false, null)
+            ->hasOne('category', 'categories', false, true, null)
             ->hasMany('contributors', 'contributors', false, true, null);
     }
 
