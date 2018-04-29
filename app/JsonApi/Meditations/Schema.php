@@ -1,8 +1,8 @@
 <?php
 
-namespace App\JsonApi\Categories;
+namespace App\JsonApi\Meditations;
 
-use App\Category;
+use App\Meditation;
 use CloudCreativity\JsonApi\Exceptions\RuntimeException;
 use CloudCreativity\LaravelJsonApi\Schema\EloquentSchema;
 
@@ -12,7 +12,7 @@ class Schema extends EloquentSchema
     /**
      * @var string
      */
-    protected $resourceType = 'categories';
+    protected $resourceType = 'meditations';
 
     /**
      * @var string
@@ -26,6 +26,9 @@ class Schema extends EloquentSchema
         'title',
         'description',
         'image_url',
+        'media_url',
+        'published_at',
+        'status'
     ];
 
     /**
@@ -36,18 +39,15 @@ class Schema extends EloquentSchema
      */
     public function getRelationships($resource, $isPrimary, array $includeRelationships)
     {
-        if (!$resource instanceof Category) {
-            throw new RuntimeException('Expecting a category model.');
+        if (!$resource instanceof Meditation) {
+            throw new RuntimeException('Expecting a meditation model.');
         }
 
         return [
-            'meditations' => [
+            'category' => [
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
-                self::META => function () use ($resource) {
-                    return ['total' => $resource->meditations()->count()];
-                },
-                self::DATA => $resource->meditations
+                self::DATA => $resource->category,
             ],
             'contributors' => [
                 self::SHOW_SELF => true,
@@ -55,7 +55,7 @@ class Schema extends EloquentSchema
                 self::META => function () use ($resource) {
                     return ['total' => $resource->contributors()->count()];
                 },
-                self::DATA => $resource->contributors
+                self::DATA => $resource->contributors,
             ],
         ];
     }

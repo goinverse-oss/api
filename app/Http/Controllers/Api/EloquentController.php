@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Utility\Inflect;
 use CloudCreativity\JsonApi\Contracts\Http\Requests\RequestInterface;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Response;
 use CloudCreativity\LaravelJsonApi\Http\Controllers\EloquentController as BaseEloquentController;
 
@@ -18,12 +23,37 @@ class EloquentController extends BaseEloquentController
         $key = $this->keyForRelationship($request->getRelationshipName());
 
         $store = $this->api()->getStore();
-        $relatedModels = [];
-        foreach($request->getDocument()->getResources()->getAll() as $resourceObject) {
-            $relatedModels[] = $store->findRecord($resourceObject->getIdentifier());
+
+        /** @var BelongsTo|HasMany|BelongsToMany|MorphToMany $relation */
+        $relation = $model->{$key}();
+        if(is_a($relation, BelongsTo::class)){
+            if($request->getDocument()->getData()) {
+                $relatedModel = $store->findRecord($request->getDocument()->getResource()->getIdentifier());
+                $relation->associate($relatedModel)->save();
+            } else {
+                $relation->dissociate()->save();
+            }
+        } else {
+            if (is_a($relation, HasMany::class)) {
+                $belongsToMethodName = Inflect::singularize($request->getResourceType());
+                foreach ($relation->getResults() as $related) {
+                    if (method_exists($related, $belongsToMethodName)) {
+                        $related->{$belongsToMethodName}()->dissociate()->save();
+                    }
+                }
+            } else if (is_a($relation, BelongsToMany::class) || is_a($relation, MorphToMany::class)) {
+                $model->{$key}()->detach();
+            }
+
+            $relatedModels = [];
+            foreach ($request->getDocument()->getResources()->getAll() as $resourceObject) {
+                $relatedModels[] = $store->findRecord($resourceObject->getIdentifier());
+            }
+            $model->refresh();
+            $model->{$key}()->saveMany($relatedModels);
         }
-        $model->{$key}()->detach();
-        $model->{$key}()->saveMany($relatedModels);
+
+        $model->refresh();
 
         return $this
             ->reply()
@@ -43,7 +73,21 @@ class EloquentController extends BaseEloquentController
         foreach($request->getDocument()->getResources()->getAll() as $resourceObject) {
             $relatedIds[] = $resourceObject->getId();
         }
-        $model->{$key}()->detach($relatedIds);
+
+        $relation = $model->{$key}();
+        if (is_a($relation, HasMany::class)) {
+            $belongsToMethodName = Inflect::singularize($request->getResourceType());
+            /** @var HasMany $relation */
+            foreach ($relation->getResults() as $related) {
+                if (in_array($related->id, $relatedIds) && method_exists($related, $belongsToMethodName)) {
+                    $related->{$belongsToMethodName}()->dissociate()->save();
+                }
+            }
+        } else if (is_a($relation, BelongsToMany::class) || is_a($relation, MorphToMany::class)) {
+            $model->{$key}()->detach($relatedIds);
+        }
+
+        $model->refresh();
 
         return $this
             ->reply()
@@ -61,13 +105,17 @@ class EloquentController extends BaseEloquentController
 
         $store = $this->api()->getStore();
         $relatedModels = [];
-        $existingIds = $model->{$key}()->allRelatedIds()->all();
+        $existingIds = [];
+        foreach ($model->{$key} as $related) {
+            $existingIds[] = $related->id;
+        }
         foreach($request->getDocument()->getResources()->getAll() as $resourceObject) {
             if(!in_array($resourceObject->getId(), $existingIds)) {
                 $relatedModels[] = $store->findRecord($resourceObject->getIdentifier());
             }
         }
         $model->{$key}()->saveMany($relatedModels);
+        $model->refresh();
 
         return $this
             ->reply()

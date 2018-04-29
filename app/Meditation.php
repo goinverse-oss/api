@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string media_url
  * @property \DateTime published_at
  * @property string status Either "publish" or "draft"
+ * @property Category category
  * @property Collection contributors
  */
 class Meditation extends Model
@@ -29,6 +30,12 @@ class Meditation extends Model
         'media_url',
         'published_at',
         'status'
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'published_at',
     ];
 
     /**

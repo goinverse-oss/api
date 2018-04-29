@@ -1,6 +1,6 @@
 <?php
 
-namespace App\JsonApi\Seasons;
+namespace App\JsonApi\Meditations;
 
 use CloudCreativity\JsonApi\Contracts\Validators\RelationshipsValidatorInterface;
 use CloudCreativity\LaravelJsonApi\Validators\AbstractValidatorProvider;
@@ -11,7 +11,7 @@ class Validators extends AbstractValidatorProvider
     /**
      * @var string
      */
-    protected $resourceType = 'seasons';
+    protected $resourceType = 'meditations';
 
     /**
      * @var array
@@ -24,8 +24,8 @@ class Validators extends AbstractValidatorProvider
      * @var array
      */
     protected $allowedIncludePaths = [
-        'podcast',
-        'contributors'
+        'contributors',
+        'category'
     ];
 
     /**
@@ -42,7 +42,9 @@ class Validators extends AbstractValidatorProvider
             'title' => "$required|string|min:1",
             'description' => "$required|string|min:1|nullable",
             'image-url' => "$required|string|min:1|nullable",
-            'number' => "$required|integer|nullable",
+            'media-url' => "$required|string|min:1|nullable",
+            'published-at' => "date|nullable",
+            'status' => "$required|string|in:publish,draft|nullable",
         ];
     }
 
@@ -52,7 +54,7 @@ class Validators extends AbstractValidatorProvider
     protected function relationshipRules(RelationshipsValidatorInterface $relationships, $record = null)
     {
         $relationships
-            ->hasOne('podcast', 'podcasts', false, true, null)
+            ->hasOne('category', 'categories', false, true, null)
             ->hasMany('contributors', 'contributors', false, true, null);
     }
 
