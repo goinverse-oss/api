@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
+use CloudCreativity\JsonApi\Document\Error;
+use CloudCreativity\JsonApi\Exceptions\AuthorizationException;
+use CloudCreativity\LaravelJsonApi\Exceptions\HandlesErrors;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+    use HandlesErrors;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -48,6 +53,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($this->isJsonApi()) {
+            if($exception instanceof AuthorizationException) {
+                $exception->addError(new Error(null, null, 403, null, 'Forbidden', 'You are not authorized to perform this action.'));
+            }
+            return $this->renderJsonApi($request, $exception);
+        }
+
         return parent::render($request, $exception);
     }
 }
