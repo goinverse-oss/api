@@ -42,6 +42,7 @@ return [
         'podcasts' => 'App\Podcast',
         'seasons' => 'App\Season',
         'episodes' => 'App\Episode',
+        'users' => 'App\User',
     ],
 
     /*
